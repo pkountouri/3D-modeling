@@ -74,6 +74,7 @@ struct Edge {
    int id_edge;
    int start;
    int end;
+   int id_dart;
 
 
   // a dart incident to this Edge:

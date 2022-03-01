@@ -6,11 +6,18 @@
 #include <sstream>
 
 #include <unordered_map>
+#include <algorithm>
 
 #include "Gmap.h"
 
+//Function to sort the edges
+bool compareByID(const Edge &a, const Edge &b)
+{
+    return a.id_edge <= b.id_edge;
+}
+
 int main(int argc, const char * argv[]) {
-    std::string file_in = "cube.obj";
+    std::string file_in = "torus.obj";
     std::string file_out_obj = "/home/ravi/git/geo1004.2022/hw/01/data/torus_triangulated.obj";
     std::string file_out_csv_d = "/home/ravi/git/geo1004.2022/hw/01/data/torus_darts.csv";
     std::string file_out_csv_0 = "/home/ravi/git/geo1004.2022/hw/01/data/torus_vertices.csv";
@@ -54,6 +61,10 @@ int main(int argc, const char * argv[]) {
     std::vector<std::pair<int, int>> ao;
     std::vector<std::pair<int, int>> a1;
     std::vector<std::pair<int, int>> a2;
+
+    std::ofstream myFile4;
+    myFile4.open("faces.csv");
+    myFile4 << "id " << ";" << " dart " << std::endl;
 
     int id_vert = 1;
     int id_edge = 1;
@@ -99,8 +110,10 @@ int main(int argc, const char * argv[]) {
                     Dart dart_1 = Dart{id_dart, index[0], edge_1.id_edge, id_face};
                     darts.push_back(dart_1);
 
+                    //
                     (vertices[index[0]-1]).id_dart = id_dart;
-                    id_dart = id_dart + 1;
+                    edge_1.id_dart = id_dart;
+                    id_dart = id_dart + 1; //increase the id darts
 
 
 
@@ -138,7 +151,9 @@ int main(int argc, const char * argv[]) {
                     //Create 2 darts for the second edge:
                     Dart dart_3 = Dart{id_dart, index[1], edge_2.id_edge, id_face};
                     darts.push_back(dart_3);
+
                     vertices[index[1]-1].id_dart = id_dart;
+                    edge_2.id_dart = id_dart;
 
                     id_dart = id_dart + 1;
 
@@ -174,7 +189,9 @@ int main(int argc, const char * argv[]) {
                     //Create 2 darts for the third edge:
                     Dart dart_5 = Dart{id_dart, index[2], edge_3.id_edge, id_face};
                     darts.push_back(dart_5);
+
                     vertices[index[2]-1].id_dart = id_dart;
+                    edge_3.id_dart = id_dart;
 
                     id_dart = id_dart + 1;
 
@@ -195,10 +212,6 @@ int main(int argc, const char * argv[]) {
 
 
 
-
-
-
-
                     //Create the forth edge of a face/////////////////////////////
                     Edge edge_4 = Edge{id_edge, index[3], index[0]};
                     k = 0;
@@ -212,14 +225,21 @@ int main(int argc, const char * argv[]) {
                     //Create 2 darts for the forth edge:
                     Dart dart_7 = Dart{id_dart, index[3], edge_4.id_edge, id_face};
                     darts.push_back(dart_7);
+
                     vertices[index[3]-1].id_dart = id_dart;
+                    edge_4.id_dart = id_dart;
 
                     id_dart = id_dart + 1;
 
                     Dart dart_8 = Dart{id_dart, index[0], edge_4.id_edge, id_face};
                     darts.push_back(dart_8);
-                    id_dart = id_dart + 1;
+
+                    //Output face CSV file
+                    myFile4  << id_face  << " ; " << id_dart << std::endl;
+
+
                     id_face = id_face + 1; // increase the id for the face
+                    id_dart = id_dart + 1;
 
 
 
@@ -231,8 +251,6 @@ int main(int argc, const char * argv[]) {
                         id_edge = id_edge + 1; //increase the id for the edge
                     }
                     edges.push_back(edge_4);
-
-
 
 
                     //A1 involution in ascending order of the darts' id:////////////
@@ -253,6 +271,8 @@ int main(int argc, const char * argv[]) {
 
                     //A1 involution(4 & 1 edge) -> same vertex & face, change edge
                     a1.emplace_back(dart_8.id_dart, dart_1.id_dart);
+
+
 
 
 
@@ -306,53 +326,76 @@ int main(int argc, const char * argv[]) {
         }
     }
 
-//    for (Edge edge : edges){
-//        std::cout << edge.id_edge << " " << edge.start << " " << edge.end << std::endl;
+    //Sort and erase duplicates edges (vector)
+    std::sort(edges.begin(), edges.end(), compareByID);
+    for (int i=1; i<edges.size(); i++){
+        edges.erase(edges.begin()+i);
+    }
+
+     //Print edges
+    for (Edge edge : edges){
+        std::cout << edge.id_edge << " " << edge.start << " " << edge.end << " " << edge.id_dart << std::endl;
+    }
+
+//    //Print vertices
+//    for (Vertex vert : vertices){
+//        std::cout << vert[index[0]].id_vert << std::endl;
 //    }
 
 //A2 involution -> same vertex & edge, change face
-    for (auto &dart: darts) {
-        for (auto &dart2: darts) {
-            // std::cout << "oxi " << std::endl;
-            if ((dart.id_vert == dart2.id_vert) && (dart.id_edge == dart2.id_edge) && (dart.id_face != dart2.id_face)) {
-                a2.emplace_back(dart.id_dart, dart2.id_dart);
-                //a2.emplace_back (dart2.id_dart, dart.id_dart);
-//                std::cout << dart.id_vert << std::endl;
-//                std::cout << "nai " << std::endl;
-            }
-        }
-    }
+//    for (auto &dart: darts) {
+//        for (auto &dart2: darts) {
+//            // std::cout << "oxi " << std::endl;
+//            if ((dart.id_vert == dart2.id_vert) && (dart.id_edge == dart2.id_edge) && (dart.id_face != dart2.id_face)) {
+//                a2.emplace_back(dart.id_dart, dart2.id_dart);
+//                //a2.emplace_back (dart2.id_dart, dart.id_dart);
+//               std::cout << dart.id_vert << std::endl;
+//               std::cout << "nai " << std::endl;
+//            }
+//        }
+//    }
 
 
     //Output darts in CSV file:
-    std::ofstream myFile;
-    myFile.open("darts.csv");
-
-    myFile << "Dart ID" << ";" << " ao " << ";" << " a1 " << ";" << " a2 " << ";" << " a3 " << ";" << " v "
-           << ";" << " e " << ";" << " f " << std::endl;
-
-    for (int i = 0; i < darts.size(); i++) {
-        int a3 = 0;
-        myFile << "d" << darts[i].id_dart << ";" << ao[i].second << ";" << a1[i].second << ";" << a2[i].second
-        << ";" << a3 << ";" << darts[i].id_vert << ";" << darts[i].id_edge << ";" << darts[i].id_face
-        << std::endl;
-    }
+//    std::ofstream myFile;
+//    myFile.open("darts.csv");
+//
+//    myFile << "Dart ID" << ";" << " ao " << ";" << " a1 " << ";" << " a2 " << ";" << " a3 " << ";" << " v "
+//           << ";" << " e " << ";" << " f " << std::endl;
+//
+//    for (int i = 0; i < darts.size(); i++) {
+//        int a3 = 0;
+//        myFile << "d" << darts[i].id_dart << ";" << ao[i].second << ";" << a1[i].second << ";" << a2[i].second
+//        << ";" << a3 << ";" << darts[i].id_vert << ";" << darts[i].id_edge << ";" << darts[i].id_face
+//        << std::endl;
+//    }
 
 
     //Output vertices in CSV file
-    std::ofstream myFile1;
-    myFile1.open("vertices.csv");
+//    std::ofstream myFile1;
+//    myFile1.open("vertices.csv");
+//
+//    myFile1 << "id" << ";" << " dart " << ";" << " x " << ";" << " y " << ";" << " z " << std::endl;
+//
+//    for (Vertex vert: vertices) {
+//        myFile1  << vert.id_vert  << " ; " << vert.id_dart << " ; " <<  vert.point.x  << " ; " << vert.point.y  << " ; " << vert.point.z << std::endl;
+//    }
 
-    myFile1 << "id" << ";" << " dart " << ";" << " x " << ";" << " y " << ";" << " z " << std::endl;
 
-    for (Vertex vert: vertices) {
-        myFile1  << vert.id_vert  << " ; " << vert.id_dart << " ; " <<  vert.point.x  << " ; " << vert.point.y  << " ; " << vert.point.z << std::endl;
+    //Output edges in CSV file
+    std::ofstream myFile3;
+    myFile3.open("edges.csv");
+
+    myFile3 << "id" << ";" << " dart " << std::endl;
+
+    for (Edge edge : edges){
+        myFile3 << edge.id_edge << " ; " << edge.id_dart << std::endl;
     }
 
 
 
     for (Vertex vert: vertices) {
-        std::cout << "vert_id : " << vert.id_vert << " id_dart : " << vert.id_dart << " point: " << vert.point << std::endl;
+      //  std::cout << "vert_id : " << vert.id_vert << " id_dart : " << vert.id_dart << " point: " << vert.point << std::endl;
 
     }
 
@@ -419,7 +462,7 @@ int main(int argc, const char * argv[]) {
 
     //Print vertices and faces input data
     for (Vertex vert: vertices) {
-        std::cout << "vert_id : " << vert.id_vert << " id_dart : " << vert.id_dart << " point: " << vert.point << std::endl;
+        //std::cout << "vert_id : " << vert.id_vert << " id_dart : " << vert.id_dart << " point: " << vert.point << std::endl;
 
     }
 
@@ -437,7 +480,7 @@ int main(int argc, const char * argv[]) {
        //std::cout<< face.id_face << std::endl;
     }
 
-   std::cout <<"test point: " << Point() << std::endl;
+//   std::cout <<"test point: " << Point() << std::endl;
 
 //
 //    std::vector<Edge> edges; //create a vector named edges
