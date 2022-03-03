@@ -1,3 +1,3 @@
-/mnt/c/Users/Pinelopi/Desktop/hw1/geo1004.2022-master/hw/01/cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/Pinelopi/Desktop/hw1/geo1004.2022-master/hw/01/cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/Pinelopi/Desktop/hw1/geo1004.2022-master/hw/01/cpp/cmake-build-debug/CMakeFiles/hw01.dir
+/Users/XeniaUnaMainelli/Desktop/Year_2/GEO1004/3D-modeling/01/cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/XeniaUnaMainelli/Desktop/Year_2/GEO1004/3D-modeling/01/cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/XeniaUnaMainelli/Desktop/Year_2/GEO1004/3D-modeling/01/cpp/cmake-build-debug/CMakeFiles/hw01.dir

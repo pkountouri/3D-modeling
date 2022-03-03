@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/hw01.dir/src/main.cpp.o -o hw01 
+/Library/Developer/CommandLineTools/usr/bin/c++  -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/hw01.dir/src/main.cpp.o  -o hw01 
