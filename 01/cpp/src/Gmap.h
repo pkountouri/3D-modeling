@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Point.h"
+#include <algorithm>
 
 struct vertex_Coords;
 struct face_Points;
@@ -29,8 +30,8 @@ struct vertex_Coords {
         this-> z = z;
     }
 
-    friend std::ostream& operator<<(std::ostream &os, const vertex_Coords& rhs) {
-        os << "Vertex = " << rhs.point;
+    friend std::ostream& operator<<(std::ostream &os, const vertex_Coords& one) {
+        os << "Vertex = " << one.point;
         return os;
     }
 
@@ -104,19 +105,19 @@ struct Dart {
         this -> a3 = a3;
     }
 
-    void operator = (const Dart &other) {
-        id_dart=other.id_dart;
-        id_vert=other.id_vert;
-        id_edge=other.id_edge;
-        id_face = other.id_face;
-        ao = other.ao;
-        a1 = other.a1;
-        a2 = other.a2;
-        a3 = other.a3;
+    void operator = (const Dart &next) {
+        id_dart=next.id_dart;
+        id_vert=next.id_vert;
+        id_edge=next.id_edge;
+        id_face = next.id_face;
+        ao = next.ao;
+        a1 = next.a1;
+        a2 = next.a2;
+        a3 = next.a3;
     }
 
-    friend std::ostream& operator<<(std::ostream &os, const Dart& rhs) {
-        os << "id = "<<rhs.id_dart<< "vertex = " << rhs.id_vert << "edge = " << rhs.id_edge << "face = " << rhs.id_face<< "ao = " << rhs.ao<< "a1 = " << rhs.a1<< "a2 = " << rhs.a2<< "a3 = " << rhs.a3;
+    friend std::ostream& operator<<(std::ostream &os, const Dart& one) {
+        os << "id = " << one.id_dart << "vertex = " << one.id_vert << "edge = " << one.id_edge << "face = " << one.id_face << "ao = " << one.ao << "a1 = " << one.a1 << "a2 = " << one.a2 << "a3 = " << one.a3;
         return os;
     }
 
@@ -140,8 +141,8 @@ struct Vertex {
         this -> z = z;
     }
 
-    friend std::ostream & operator<<(std::ostream &os, const Vertex&rhs) {
-        os<< "id = "<< rhs.id_vert<< "dart = "<<rhs.id_dart<< "x = "<<rhs.x<< "y = "<<rhs.y<< "z = "<<rhs.z;
+    friend std::ostream & operator<<(std::ostream &os, const Vertex&one) {
+        os << "id = " << one.id_vert << "dart = " << one.id_dart << "x = " << one.x << "y = " << one.y << "z = " << one.z;
         return os;
     }
 
@@ -160,8 +161,8 @@ struct Edge {
         this -> id_dart = id_dart;
     }
 
-    friend std::ostream & operator<<(std::ostream &os, const Edge&rhs) {
-        os<< "id = "<< rhs.id_edge<< "dart = "<<rhs.id_dart;
+    friend std::ostream & operator<<(std::ostream &os, const Edge&one) {
+        os << "id = " << one.id_edge << "dart = " << one.id_dart;
         return os;
     }
 
@@ -182,8 +183,8 @@ struct Face {
         this -> a = a;
     }
 
-    friend std::ostream & operator<<(std::ostream &os, const Face&rhs) {
-        os<< "id = "<< rhs.id_face<< "dart = "<<rhs.a;
+    friend std::ostream & operator<<(std::ostream &os, const Face&one) {
+        os << "id = " << one.id_face << "dart = " << one.a;
         return os;
     }
 
@@ -200,8 +201,8 @@ struct Volume {
         this -> id_dart = id_dart;
     }
 
-    friend std::ostream & operator<<(std::ostream &os, const Volume&rhs) {
-        os<< "id = "<< rhs.id_vol<< "dart = "<<rhs.id_dart;
+    friend std::ostream & operator<<(std::ostream &os, const Volume&one) {
+        os << "id = " << one.id_vol << "dart = " << one.id_dart;
         return os;
     }
 
