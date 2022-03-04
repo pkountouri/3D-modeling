@@ -49,18 +49,18 @@ struct Dart {
     int a2;
     int a3;
 
-    Dart (const int &id_dart, const int &id_vert, const int &id_edge, const int &id_face) { // , const int &a0, const int &a1, const int &a2, const int &a3
-        this -> id_dart = id_dart;
-        this -> id_vert = id_vert;
-        this -> id_edge = id_edge;
-        this -> id_face = id_face;
-        this -> a0 = a0;
-        this -> a1 = a1;
-        this -> a2 = a2;
-        this -> a3 = a3;
+    Dart (const int &id_dart, const int &id_vert, const int &id_edge, const int &id_face) {
+        this-> id_dart = id_dart;
+        this-> id_vert = id_vert;
+        this-> id_edge = id_edge;
+        this-> id_face = id_face;
+        this-> a0 = a0;
+        this-> a1 = a1;
+        this-> a2 = a2;
+        this-> a3 = a3;
     }
 
-    void operator = (const Dart &next) {
+    void operator = (const Dart& next) {
         id_dart=next.id_dart;
         id_vert=next.id_vert;
         id_edge=next.id_edge;
@@ -83,12 +83,12 @@ struct Vertex {
     float z;
     Point point;
 
-    Vertex (const int &id_vert, const int&id_dart, const float&x, const float &y, const float &z) {
-        this -> id_vert = id_vert;
-        this -> id_dart = id_dart;
-        this -> x = x;
-        this -> y = y;
-        this -> z = z;
+    Vertex (const int &id_vert, const int &id_dart, const float &x, const float &y, const float &z) {
+        this-> id_vert = id_vert;
+        this-> id_dart = id_dart;
+        this-> x = x;
+        this-> y = y;
+        this-> z = z;
     }
 
 };
@@ -101,9 +101,9 @@ struct Edge {
     int start;
     int end;
 
-    Edge (const int &id_edge, const int&id_dart) {
-        this -> id_edge = id_edge;
-        this -> id_dart = id_dart;
+    Edge (const int &id_edge, const int &id_dart) {
+        this-> id_edge = id_edge;
+        this-> id_dart = id_dart;
     }
 
 };
@@ -114,15 +114,15 @@ struct Face {
 //    int a,b,c,d;
     int id_face;
     int id_dart;
-    id vertices;
+    std::vector<int> vertices;
 //    Point v1,v2,v3,v4;
 //  std::vector<Vertex> faces;
 //  int id_face;
 
 
-    Face (const int &id_face, const int&id_dart) {
-        this->id_face = id_face;
-        this->id_dart = id_dart;
+    Face (const int &id_face, const int &id_dart) {
+        this-> id_face = id_face;
+        this-> id_dart = id_dart;
     }
 
 };
@@ -133,9 +133,9 @@ struct Volume {
     int id_vol;
     int id_dart;
 
-    Volume(const int &id_vol, const int&id_dart) {
-        this -> id_vol = id_vol;
-        this -> id_dart = id_dart;
+    Volume(const int &id_vol, const int &id_dart) {
+        this-> id_vol = id_vol;
+        this-> id_dart = id_dart;
     }
 
 };

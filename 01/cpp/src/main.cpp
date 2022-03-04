@@ -8,13 +8,15 @@
 #include "Gmap.h"
 #include <unordered_map>
 
+
 //Function to sort the edges
 bool compareByID(const Edge &a, const Edge &b)
 {
     return a.id_edge <= b.id_edge;
 }
 
-// additional function to create a string using points (needed for triangulation later)
+// additional function to create a string from a point (needed for triangulation later)
+// Helped by this website: https://newbedev.com/c-member-reference-base-type-int-is-not-a-structure-or-union
 std::string create_string(Point point) {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(4) << point.x << point.y << point.z;
@@ -49,10 +51,16 @@ int main(int argc, const char * argv[]) {
 
     volume.emplace_back(0,0);
 
+
     //Output faces in CSV file (header)
     std::ofstream myFile4;
     myFile4.open("torus_faces.csv");
     myFile4 << "id " << ";" << " dart " << std::endl;
+
+    for (Face face: faces) {
+        myFile4 << face.id_face<< " ; " << face.id_dart << std::endl;
+    }
+    myFile4.close();
 
 
     //Define and initialize ID value for vertices,edges, darts and faces
@@ -78,7 +86,6 @@ int main(int argc, const char * argv[]) {
                     id_vert++;
                     vertices.emplace_back(vertex);
                 }
-                else vertices.emplace_back();
             }
             if (word == "f") {
                 std::vector<int> index;
@@ -351,7 +358,7 @@ int main(int argc, const char * argv[]) {
     // index the centre of the face (barycentric coordinate), using above created index_obj index.
     for (auto face:faces) {
         Point vertices_sum;
-        for (auto& n: face.vertices) {
+        for (auto &n: face.vertices) {
             vertices_sum += n.point;
         }
 
@@ -375,7 +382,7 @@ int main(int argc, const char * argv[]) {
 
             // find the barycentric coordinate by summing the points and dividing in half.
             // upon reaching the end of the vertices, create an edge joining the last vertex to the initial one.
-            if (i< (face.vertices.size() -1)) {
+            if (i< (face.vertices.size() - 1)) {
                 next_vertex = face.vertices[i + 1].point;
                 edge_barycentric = ((current_vertex + next_vertex) / 2);
             }
@@ -487,8 +494,8 @@ int main(int argc, const char * argv[]) {
     std::ofstream output_volume;
     output_volume.open (file_out_csv_3);
     output_volume << "id, dart\n";
-    for (auto volume : volume) {
-        output_volume << volume.id_vol << ", " << volume.id_dart << std::endl;
+    for (auto volumee : volume) {
+        output_volume << volumee.id_vol << ", " << volumee.id_dart << std::endl;
     }
     output_volume.close();
 
