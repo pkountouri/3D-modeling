@@ -14,7 +14,7 @@ bool compareByID(const Edge &a, const Edge &b)
     return a.id_edge <= b.id_edge;
 }
 
-// additional function to create a string using two points (needed for triangulation later)
+// additional function to create a string using points (needed for triangulation later)
 std::string create_string(Point point) {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(4) << point.x << point.y << point.z;
@@ -37,9 +37,6 @@ int main(int argc, const char * argv[]) {
 //Read vertices and faces from OBJ file
 
     // Creation of vectors
-    std::vector<vertex_Coords> temp_vertices;
-    std::vector<face_Points> temp_faces;
-
     std::vector<Vertex> vertices;
     std::vector<Face> faces;
     std::vector<Edge> edges;
@@ -49,10 +46,7 @@ int main(int argc, const char * argv[]) {
     std::vector<std::pair<int, int>> a1;
     std::vector<std::pair<int, int>> a2;
     std::vector<std::pair<int, int>> a3;
-    int alpha_0;
-    int alpha_1;
-    int alpha_2;
-    int alpha_3;
+
     volume.emplace_back(0,0);
 
     //Output faces in CSV file (header)
@@ -84,7 +78,7 @@ int main(int argc, const char * argv[]) {
                     id_vert++;
                     vertices.emplace_back(vertex);
                 }
-                else temp_vertices.emplace_back(); // vertices.emplace_back();
+                else vertices.emplace_back();
             }
             if (word == "f") {
                 std::vector<int> index;
@@ -108,7 +102,7 @@ int main(int argc, const char * argv[]) {
                     }
 
                     //Create 2 darts for the first edge:
-                    Dart dart_1 = Dart{id_dart, index[0], edge_1.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_1 = Dart{id_dart, index[0], edge_1.id_edge, id_face};
                     darts.push_back(dart_1);
 
                     //Update the id dart for the first vertex of the corresponding face
@@ -119,7 +113,7 @@ int main(int argc, const char * argv[]) {
 
                     id_dart = id_dart + 1; //increase the id darts
 
-                    Dart dart_2 = Dart{id_dart, index[1], edge_1.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_2 = Dart{id_dart, index[1], edge_1.id_edge, id_face};
                     darts.push_back(dart_2);
                     id_dart = id_dart + 1;
 
@@ -142,7 +136,7 @@ int main(int argc, const char * argv[]) {
                     }
 
                     //Create 2 darts for the second edge:
-                    Dart dart_3 = Dart{id_dart, index[1], edge_2.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_3 = Dart{id_dart, index[1], edge_2.id_edge, id_face};
                     darts.push_back(dart_3);
 
                     //Update the id dart for the second vertex of the corresponding face
@@ -153,7 +147,7 @@ int main(int argc, const char * argv[]) {
 
                     id_dart = id_dart + 1; //increase the id darts
 
-                    Dart dart_4 = Dart{id_dart, index[2], edge_2.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_4 = Dart{id_dart, index[2], edge_2.id_edge, id_face};
                     darts.push_back(dart_4);
                     id_dart = id_dart + 1;
 
@@ -176,7 +170,7 @@ int main(int argc, const char * argv[]) {
                     }
 
                     //Create 2 darts for the third edge:
-                    Dart dart_5 = Dart{id_dart, index[2], edge_3.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_5 = Dart{id_dart, index[2], edge_3.id_edge, id_face};
                     darts.push_back(dart_5);
 
                     //Update the id dart for the third vertex of the corresponding face
@@ -187,7 +181,7 @@ int main(int argc, const char * argv[]) {
 
                     id_dart = id_dart + 1; //increase the id darts
 
-                    Dart dart_6 = Dart{id_dart, index[3], edge_3.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_6 = Dart{id_dart, index[3], edge_3.id_edge, id_face};
                     darts.push_back(dart_6);
                     id_dart = id_dart + 1;
 
@@ -210,7 +204,7 @@ int main(int argc, const char * argv[]) {
                     }
 
                     //Create 2 darts for the forth edge:
-                    Dart dart_7 = Dart{id_dart, index[3], edge_4.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_7 = Dart{id_dart, index[3], edge_4.id_edge, id_face};
                     darts.push_back(dart_7);
 
                     //Update the id dart for the forth vertex of the corresponding face
@@ -221,7 +215,7 @@ int main(int argc, const char * argv[]) {
 
                     id_dart = id_dart + 1;
 
-                    Dart dart_8 = Dart{id_dart, index[0], edge_4.id_edge, id_face, alpha_0, alpha_1, alpha_2, alpha_3};
+                    Dart dart_8 = Dart{id_dart, index[0], edge_4.id_edge, id_face};
                     darts.push_back(dart_8);
 
                     //Output face CSV file
@@ -280,7 +274,7 @@ int main(int argc, const char * argv[]) {
 
     //Sort and erase duplicates edges inside vector edges
     std::sort(edges.begin(), edges.end(), compareByID);
-    for (int i=1; i<edges.size(); i++){
+    for (int i=1; i<edges.size(); i++) {
         edges.erase(edges.begin()+i);
     }
 
@@ -342,8 +336,6 @@ int main(int argc, const char * argv[]) {
   // ## Create triangles from the darts ##
 
 
-
-
   // ## Write triangles to obj ##
     // index for vertices to make an OBJ file.
     // Create a vector for holding indexes of newly created faces, index_face;
@@ -357,13 +349,13 @@ int main(int argc, const char * argv[]) {
     // loop through all temporarily created faces, and find the sum of all vertices that make up the face.
     // divide by the number of vertices that make up the face: this lets us find the barycentric coordinate.
     // index the centre of the face (barycentric coordinate), using above created index_obj index.
-    for (auto face:temp_faces) {
+    for (auto face:faces) {
         Point vertices_sum;
-        for (auto& n: face.temp_vertices) {
+        for (auto& n: face.vertices) {
             vertices_sum += n.point;
         }
 
-        auto centre_of_face = vertices_sum / face.temp_vertices.size();
+        auto centre_of_face = vertices_sum / face.vertices.size();
         int index_centre_of_face = index_obj++;
 
         triangulation_vertices[create_string(centre_of_face)] = index_centre_of_face;
@@ -371,24 +363,24 @@ int main(int argc, const char * argv[]) {
 
 
         // loop through all temporarily created vertices, and create vectors for the indices of the triangles
-        for (int i = 0; i<face.temp_vertices.size(); i++){
+        for (int i = 0; i<face.vertices.size(); i++) {
             std::vector<int> index_triangle_1;
             std::vector<int> index_triangle_2;
 
             // return the current vertex, and move on to the next vertex.
             // create a point to hold the barycentric coordinate of the edge.
-            auto current_vertex = face.temp_vertices[i].point;
+            auto current_vertex = face.vertices[i].point;
             Point next_vertex;
             Point edge_barycentric;
 
             // find the barycentric coordinate by summing the points and dividing in half.
             // upon reaching the end of the vertices, create an edge joining the last vertex to the initial one.
-            if (i< (face.temp_vertices.size() -1)) {
-                next_vertex = face.temp_vertices[i + 1].point;
+            if (i< (face.vertices.size() -1)) {
+                next_vertex = face.vertices[i + 1].point;
                 edge_barycentric = ((current_vertex + next_vertex) / 2);
             }
             else{
-                next_vertex = face.temp_vertices[0].point;
+                next_vertex = face.vertices[0].point;
                 edge_barycentric = ((current_vertex + next_vertex) / 2);
             }
 
@@ -468,7 +460,7 @@ int main(int argc, const char * argv[]) {
     std::ofstream output_dart;
     output_dart.open (file_out_csv_d);
     output_dart << "id, a0, a1, a2, a3, vertex, edge, face\n";
-    for (auto dart: darts){
+    for (auto dart: darts) {
         output_dart << dart.id_dart << ", " << dart.a0 << ", " << dart.a1 << ", " << dart.a2 << ", " << dart.a3 << ", " << dart.id_vert << ", " << dart.id_edge << ", " << dart.id_face << std::endl;
     }
     output_dart.close();
@@ -477,7 +469,7 @@ int main(int argc, const char * argv[]) {
     std::ofstream output_edge;
     output_edge.open (file_out_csv_1);
     output_edge << "id, dart\n";
-    for (auto edge : edges){
+    for (auto edge : edges) {
         output_edge << edge.id_edge << ", " << edge.id_dart << std::endl;
     }
     output_edge.close();
