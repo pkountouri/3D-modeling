@@ -45,7 +45,7 @@ int main(int argc, const char * argv[]) {
     std::vector<Edge> edges;
     std::vector<Dart> darts;
     std::vector<Volume> volume;
-    std::vector<std::pair<int, int>> ao;
+    std::vector<std::pair<int, int>> a0;
     std::vector<std::pair<int, int>> a1;
     std::vector<std::pair<int, int>> a2;
     std::vector<std::pair<int, int>> a3;
@@ -239,20 +239,20 @@ int main(int argc, const char * argv[]) {
 
                     //Ao involution in ascending order of the darts' id:////////////
                     //Ao involution (1st edge) -> same edge & face, change vertex
-                    ao.emplace_back(dart_1.id_dart, dart_2.id_dart);
-                    ao.emplace_back(dart_2.id_dart, dart_1.id_dart);
+                    a0.emplace_back(dart_1.id_dart, dart_2.id_dart);
+                    a0.emplace_back(dart_2.id_dart, dart_1.id_dart);
 
                     //Ao involution (2nd edge) -> same edge & face, change vertex
-                    ao.emplace_back(dart_3.id_dart, dart_4.id_dart);
-                    ao.emplace_back(dart_4.id_dart, dart_3.id_dart);
+                    a0.emplace_back(dart_3.id_dart, dart_4.id_dart);
+                    a0.emplace_back(dart_4.id_dart, dart_3.id_dart);
 
                     //Ao involution (3rd edge) -> same edge & face, change vertex
-                    ao.emplace_back(dart_5.id_dart, dart_6.id_dart);
-                    ao.emplace_back(dart_6.id_dart, dart_5.id_dart);
+                    a0.emplace_back(dart_5.id_dart, dart_6.id_dart);
+                    a0.emplace_back(dart_6.id_dart, dart_5.id_dart);
 
                     //Ao involution (4rth edge) -> same edge & face, change vertex
-                    ao.emplace_back(dart_7.id_dart, dart_8.id_dart);
-                    ao.emplace_back(dart_8.id_dart, dart_7.id_dart);
+                    a0.emplace_back(dart_7.id_dart, dart_8.id_dart);
+                    a0.emplace_back(dart_8.id_dart, dart_7.id_dart);
 
 
                     //A1 involution in ascending order of the darts' id:////////////
@@ -300,12 +300,12 @@ int main(int argc, const char * argv[]) {
     std::ofstream myFile1;
     myFile1.open("torus_darts.csv");
     //Header construction
-    myFile1 << "Dart ID" << ";" << " ao " << ";" << " a1 " << ";" << " a2 " << ";" << " a3 " << ";" << " v "
+    myFile1 << "Dart ID" << ";" << " a0 " << ";" << " a1 " << ";" << " a2 " << ";" << " a3 " << ";" << " v "
            << ";" << " e " << ";" << " f " << std::endl;
 
     for (int i = 0; i < darts.size(); i++) {
         int a3 = 0;
-        myFile1 << "d" << darts[i].id_dart << ";" << ao[i].second << ";" << a1[i].second << ";" << a2[i].second
+        myFile1 << "d" << darts[i].id_dart << ";" << a0[i].second << ";" << a1[i].second << ";" << a2[i].second
         << ";" << a3 << ";" << darts[i].id_vert << ";" << darts[i].id_edge << ";" << darts[i].id_face
         << std::endl;
     }
@@ -467,9 +467,9 @@ int main(int argc, const char * argv[]) {
 
     std::ofstream output_dart;
     output_dart.open (file_out_csv_d);
-    output_dart << "id, ao, a1, a2, a3, vertex, edge, face\n";
+    output_dart << "id, a0, a1, a2, a3, vertex, edge, face\n";
     for (auto dart: darts){
-        output_dart << dart.id_dart << ", " << dart.ao << ", " << dart.a1 << ", " << dart.a2 << ", " << dart.a3 << ", " << dart.id_vert << ", " << dart.id_edge << ", " << dart.id_face << std::endl;
+        output_dart << dart.id_dart << ", " << dart.a0 << ", " << dart.a1 << ", " << dart.a2 << ", " << dart.a3 << ", " << dart.id_vert << ", " << dart.id_edge << ", " << dart.id_face << std::endl;
     }
     output_dart.close();
 
@@ -534,15 +534,15 @@ int main(int argc, const char * argv[]) {
 //        std::cout << Edge {edges.start[i]}  <<std::endl;
 //    }
 
-//    //Print the first and second dart_id of the ao involution
-//    for (int i=0; i<ao.size();i++){
+//    //Print the first and second dart_id of the a0 involution
+//    for (int i=0; i<a0.size();i++){
 //        std::cout<< a2[i].first<<"  "<<a2[i].second<<std::endl;
 //}
 
     //Print the darts.csv
 //    for (int i=0; i<darts.size();i++){
 //        int a3 = 0;
-//        std::cout<< darts[i].id_dart << " " << ao[i].second << " " << a1[i].second << " " << a2[i].second << " " << a3 << " " << darts[i].id_vert << " " << darts[i].id_edge << " " << darts[i].id_face <<std::endl;
+//        std::cout<< darts[i].id_dart << " " << a0[i].second << " " << a1[i].second << " " << a2[i].second << " " << a3 << " " << darts[i].id_vert << " " << darts[i].id_edge << " " << darts[i].id_face <<std::endl;
 //    }
 
 //    //Print the vertices

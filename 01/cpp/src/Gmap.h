@@ -89,17 +89,17 @@ struct Dart {
     int id_vert;
     int id_edge;
     int id_face;
-    int ao;
+    int a0;
     int a1;
     int a2;
     int a3;
 
-    Dart (const int &id_dart, const int &id_vert, const int &id_edge, const int &id_face, const int &ao, const int &a1, const int &a2, const int &a3) {
+    Dart (const int &id_dart, const int &id_vert, const int &id_edge, const int &id_face, const int &a0, const int &a1, const int &a2, const int &a3) {
         this -> id_dart = id_dart;
         this -> id_vert = id_vert;
         this -> id_edge = id_edge;
         this -> id_face = id_face;
-        this -> ao = ao;
+        this -> a0 = a0;
         this -> a1 = a1;
         this -> a2 = a2;
         this -> a3 = a3;
@@ -110,14 +110,14 @@ struct Dart {
         id_vert=next.id_vert;
         id_edge=next.id_edge;
         id_face = next.id_face;
-        ao = next.ao;
+        a0 = next.a0;
         a1 = next.a1;
         a2 = next.a2;
         a3 = next.a3;
     }
 
     friend std::ostream& operator<<(std::ostream &os, const Dart& one) {
-        os << "id = " << one.id_dart << "vertex = " << one.id_vert << "edge = " << one.id_edge << "face = " << one.id_face << "ao = " << one.ao << "a1 = " << one.a1 << "a2 = " << one.a2 << "a3 = " << one.a3;
+        os << "id = " << one.id_dart << "vertex = " << one.id_vert << "edge = " << one.id_edge << "face = " << one.id_face << "a0 = " << one.a0 << "a1 = " << one.a1 << "a2 = " << one.a2 << "a3 = " << one.a3;
         return os;
     }
 
