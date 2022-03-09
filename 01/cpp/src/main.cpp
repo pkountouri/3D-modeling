@@ -8,7 +8,7 @@
 #include "Gmap.h"
 #include <unordered_map>
 
-//Function to sort the edges
+//Function to sort the edges (needed afterwards)
 bool compareByID(const Edge &a, const Edge &b)
 {
     return a.id_edge <= b.id_edge;
@@ -16,6 +16,7 @@ bool compareByID(const Edge &a, const Edge &b)
 
 int main(int argc, const char * argv[]) {
     std::string file_in = "torus.obj";
+    std::string file_out_obj = "torus_triangulated.obj";
 
 
     // ## Read OBJ file ##
@@ -59,15 +60,17 @@ int main(int argc, const char * argv[]) {
                     vertex.id_vert = id_vert;
                     id_vert++;
                     vertices.emplace_back(vertex);
-                }
-                else vertices.emplace_back();
+                } else vertices.emplace_back();
             }
             if (word == "f") {
                 std::vector<int> index;
                 while (iss >> word)
                     index.push_back(std::stoi(word));
                 if (index.size() == 4) {
-                    faces.emplace_back(Face{index[0], index[1], index[2], index[3]});
+                    faces.emplace_back(Face{index[0], index[1], index[2], index[3], id_face});
+
+                    /* loop through the faces creating four edges and two darts for each edge
+                     Then the a0 and a1 are created based on the id of the darts and their position*/
 
 
                     // ## Construct generalised map using the structures from Gmap.h ##
@@ -88,7 +91,8 @@ int main(int argc, const char * argv[]) {
                     darts.push_back(dart_1);
 
                     //Update the id dart for the first vertex of the corresponding face
-                    (vertices[index[0]-1]).id_dart = id_dart;  // -1: OBJ uses 1-based indexes while C++ 0-based indexes
+                    (vertices[index[0] -
+                              1]).id_dart = id_dart;  // -1: OBJ uses 1-based indexes while C++ 0-based indexes
 
                     //Update the id dart for the first edge of the corresponding face
                     edge_1.id_dart = id_dart;
@@ -122,7 +126,7 @@ int main(int argc, const char * argv[]) {
                     darts.push_back(dart_3);
 
                     //Update the id dart for the second vertex of the corresponding face
-                    vertices[index[1]-1].id_dart = id_dart;
+                    vertices[index[1] - 1].id_dart = id_dart;
 
                     //Update the id dart for the second edge of the corresponding face
                     edge_2.id_dart = id_dart;
@@ -156,7 +160,7 @@ int main(int argc, const char * argv[]) {
                     darts.push_back(dart_5);
 
                     //Update the id dart for the third vertex of the corresponding face
-                    vertices[index[2]-1].id_dart = id_dart;
+                    vertices[index[2] - 1].id_dart = id_dart;
 
                     //Update the id dart for the third edge of the corresponding face
                     edge_3.id_dart = id_dart;
@@ -190,7 +194,7 @@ int main(int argc, const char * argv[]) {
                     darts.push_back(dart_7);
 
                     //Update the id dart for the forth vertex of the corresponding face
-                    vertices[index[3]-1].id_dart = id_dart;
+                    vertices[index[3] - 1].id_dart = id_dart;
 
                     //Update the id dart for the forth edge of the corresponding face
                     edge_4.id_dart = id_dart;
@@ -201,7 +205,9 @@ int main(int argc, const char * argv[]) {
                     darts.push_back(dart_8);
 
                     //Output face CSV file
-                    myFile4  << id_face  << " ; " << id_dart << std::endl;
+                    myFile4 << id_face << " ; " << id_dart << std::endl;
+
+
 
                     id_face = id_face + 1; // increase the id for the face
                     id_dart = id_dart + 1; // increase the id darts for the next face
@@ -256,8 +262,8 @@ int main(int argc, const char * argv[]) {
 
     //Sort and erase duplicates edges inside vector edges
     std::sort(edges.begin(), edges.end(), compareByID);
-    for (int i=1; i<edges.size(); i++){
-        edges.erase(edges.begin()+i);
+    for (int i = 1; i < edges.size(); i++) {
+        edges.erase(edges.begin() + i);
     }
 
     //A2 involution -> same vertex & edge, change face
@@ -269,7 +275,6 @@ int main(int argc, const char * argv[]) {
         }
     }
 
-
     // ## Output generalised map to CSV ##
 
     //Output darts in CSV file:
@@ -277,13 +282,13 @@ int main(int argc, const char * argv[]) {
     myFile1.open("torus_darts.csv");
     //Header construction
     myFile1 << "Dart ID" << ";" << " ao " << ";" << " a1 " << ";" << " a2 " << ";" << " a3 " << ";" << " v "
-           << ";" << " e " << ";" << " f " << std::endl;
+            << ";" << " e " << ";" << " f " << std::endl;
 
     for (int i = 0; i < darts.size(); i++) {
         int a3 = 0;
         myFile1 << "d" << darts[i].id_dart << ";" << ao[i].second << ";" << a1[i].second << ";" << a2[i].second
-        << ";" << a3 << ";" << darts[i].id_vert << ";" << darts[i].id_edge << ";" << darts[i].id_face
-        << std::endl;
+                << ";" << a3 << ";" << darts[i].id_vert << ";" << darts[i].id_edge << ";" << darts[i].id_face
+                << std::endl;
     }
 
     //Output vertices in CSV file
@@ -293,7 +298,8 @@ int main(int argc, const char * argv[]) {
     myFile2 << "id" << ";" << " dart " << ";" << " x " << ";" << " y " << ";" << " z " << std::endl;
 
     for (Vertex vert: vertices) {
-        myFile2  << vert.id_vert  << " ; " << vert.id_dart << " ; " <<  vert.point.x  << " ; " << vert.point.y  << " ; " << vert.point.z << std::endl;
+        myFile2 << vert.id_vert << " ; " << vert.id_dart << " ; " << vert.point.x << " ; " << vert.point.y << " ; "
+                << vert.point.z << std::endl;
     }
 
     //Output edges in CSV file
@@ -302,7 +308,7 @@ int main(int argc, const char * argv[]) {
     //Header construction
     myFile3 << "id" << ";" << " dart " << std::endl;
 
-    for (Edge edge : edges){
+    for (Edge edge: edges) {
         myFile3 << edge.id_edge << " ; " << edge.id_dart << std::endl;
     }
 
@@ -315,13 +321,87 @@ int main(int argc, const char * argv[]) {
 
 
 
-  // ## Create triangles from the darts ##
+    // ## Create triangles from the darts ##
 
+    /*loop through edges,create barycentric edge and store them into vector vertices
+       giving as ID the next id_vert
 
+       */
+
+    for (auto edge = edges.begin(); edge != edges.end(); edge++) {
+        Point vert_sum;
+        Vertex center_of_edge;
+        vert_sum = (vertices[(edge->start) - 1].point + vertices[(edge->end) - 1].point);
+        center_of_edge.point = vert_sum / 2;
+        center_of_edge.id_vert = id_vert;
+
+        edge->id_bar_edge = id_vert;
+
+        id_vert++;
+        vertices.emplace_back(center_of_edge);
+    }
+
+    /*loop through faces,create barycentric face and store them into vector vertices
+      giving as ID the next id_vert after the last barycentric edge id_vert
+      */
+
+    for (auto face = faces.begin(); face != faces.end(); face++) {
+        Point vertices_sum;
+        Vertex center_of_face;
+        vertices_sum = (vertices[(face->a) - 1].point + vertices[(face->b) - 1].point + vertices[(face->c) - 1].point +
+                        vertices[(face->d) - 1].point);
+        center_of_face.point = vertices_sum / 4;
+
+        face->id_bar_face = id_vert;
+
+        center_of_face.id_vert = id_vert;
+        id_vert++;
+        vertices.emplace_back(center_of_face);
+    }
+
+    /* Create a vector named triangulation to store the three id_vert
+     Each triangle consist of one vertex, one barycenter edge and one barycenter face
+     The values of these ids are stored in vector "triangulation"
+     */
+
+    std::vector<Triangle> triangulation;
+    for (int j = 0; j < darts.size(); j++) {
+        Triangle triangle{};
+        triangle.a = darts[j].id_vert;
+        for (Edge edge : edges) {
+            if (darts[j].id_edge == edge.id_edge)
+                triangle.b = edge.id_bar_edge;
+        }
+        for (Face face : faces) {
+            if (darts[j].id_face == face.id_face)
+                triangle.c = face.id_bar_face;
+        }
+        triangulation.emplace_back(triangle);
+    }
 
 
   // ## Write triangles to obj ##
+    std::ofstream output_obj;
+    output_obj.open (file_out_obj);
+    for (auto vert: vertices) {
+        output_obj << "v " << vert.point.x << " " << vert.point.y << " " << vert.point.z << std::endl;
+    }
 
+    /*Give the correct orientation to our triangles
+     As we read the faces the odd darts have the correct orientation
+     and so for the even we reverse the a and b vertex of the triangle */
+
+    int index = 1;
+    for (auto triang : triangulation) {
+        if (index % 2 == 0) {
+            output_obj << "f " << triang.b << " " << triang.a << " " << triang.c << std::endl;
+        }
+        else{
+            output_obj << "f " << triang.a << " " << triang.b << " " << triang.c << std::endl;
+        }
+        index++;
+    }
+    output_obj.close();
 
 
 
@@ -362,6 +442,12 @@ int main(int argc, const char * argv[]) {
 //    for (int i=1; i<vertices.size()+1;i++){
 //         std::cout << i << vertices[i-1].point.x << std::endl;
 //    }
+
+//    //Print the triangles
+//    for (auto triang: triangulation){
+//        std::cout << triang.a << " " << triang.b << " " << triang.c << std::endl;
+//    }
+
 
   return 0;
 }
